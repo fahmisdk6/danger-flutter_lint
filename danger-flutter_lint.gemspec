@@ -17,13 +17,12 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_runtime_dependency "danger-plugin-api", "~> 1.0"
-  spec.add_runtime_dependency "flutter_analyze_parser", "~> 0.1.2"
 
-  spec.add_development_dependency "codecov", "~> 0.1"
-  spec.add_development_dependency "guard-rspec", "~> 4.7"
-  spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rb-readline", "~> 0.5"
-  spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "rubocop", "~> 0.6"
-  spec.add_development_dependency "simplecov", "~> 0.16"
+  spec.add_development_dependency "codecov", "~> 0.6.0"
+  spec.add_development_dependency "guard-rspec", "~> 4.7.3"
+  spec.add_development_dependency "rake", "~> 13.0.6"
+  spec.add_development_dependency "rb-readline", "~> 0.5.5"
+  spec.add_development_dependency "rspec", "~> 3.11.0"
+  spec.add_development_dependency "rubocop", "~> 1.25.1"
+  spec.add_development_dependency "simplecov", "~> 0.21.2"
 end

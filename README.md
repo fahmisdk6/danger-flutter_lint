@@ -18,30 +18,65 @@ Or install it yourself as:
 
 ## Usage
 
-Flutter Analyze doesn't give an option to generate report but you can achieve this easily using regular shell command (locally or on CI):
+Here are the steps you need to use this plugin
 
-```sh
-$ flutter analyze > flutter_analyze_report.txt
+### Use directly on CI with a runner that have flutter installed
+
+If your pipeline runner already has flutter installed, you can easily use `flutter_lint` by adding this to your `Dangerfile`
+
+```ruby
+flutter_lint.lint
 ```
 
-It will add output from `flutter analyze` command to `flutter_analyze_report.txt`.
+By default, if you don't set up anything for the linter, we will generate report for the whole project using `flutter analyze` and use it to report the project.
+
+But if you're working on such a large project, we don't recommend you to use this. You can pass the `modified_files` on the `linter` in which case we will run `dart analyze modified_files` that will only analyze certain files.
+
+```ruby
+active_files = (git.modified_files - git.deleted_files) + git.added_files
+flutter_lint.lint(active_files.filter { |path| path.match?(/.*\.dart$/) })
+```
+
+### Use report file
+
+You can generate report from `flutter analyze` for a full project to a file by using this command
+
+```sh
+$ flutter analyze > analyze_report.txt
+```
+
+Or if you only work on larger project, and only need to check linter for specific files/modified files, you can use `dart analyze`
+
+```sh
+$ dart analyze lib/file1.dart lib/file2.dart > analyze_report.txt
+```
+
+Actually `dart analyzer` has a lot more options, such as `--format=machine` and `--format=json` but we currently **don't** support it, currently we only support the default human readable report.
+
+Then, you can also use Flutter built-in function using this command:
+
+```sh
+$ flutter analyze --write=_analyze_report.txt
+```
+
+But as the report generated from this command isn't as good as the other methods on current version of Flutter (2.10), we don't recommend you to use it. This built-in command only generate the `description` and doesn't give the `rule` violation, it also always generate absolute path of the file, instead of the relative one, and the report won't be as good as the others.
 
 Now you need to set `report_path` and invoke `lint` in your Dangerfile.
 
 ```ruby
-flutter_lint.report_path = "flutter_analyze_report.txt"
+flutter_lint.report_path = "analyze_report.txt"
 flutter_lint.lint
 ```
 
 This will add markdown table with summary into your PR.
 
-Or make Danger comment directly on the line instead of printing a Markdown table (GitHub only)
+If you want danger to directly comment on the changed lines instead of printing a Markdown table (GitHub only), you can use this
 
 ```ruby
 flutter_lint.lint(inline_mode: true)
 ```
 
-Default value for `inline_mode` parameter is false.
+Default value for `inline_mode` parameter is `false`.
 
 #### Lint only added/modified files
 
@@ -52,6 +87,8 @@ flutter_lint.only_modified_files = true
 flutter_lint.report_path = "flutter_analyze_report.txt"
 flutter_lint.lint
 ```
+
+Default value for `only_modified_files` parameter is `true`.
 
 ## Development
 

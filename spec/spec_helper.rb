@@ -16,7 +16,6 @@ require "bundler/setup"
 require "rspec"
 require "danger"
 require "danger_plugin"
-require "flutter_analyze_parser"
 
 RSpec.configure do |config|
   config.example_status_persistence_file_path = ".rspec_status"

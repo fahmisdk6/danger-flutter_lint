@@ -90,6 +90,24 @@ flutter_lint.lint
 
 Default value for `only_modified_files` parameter is `true`.
 
+It's also possible to pass a block to filter out any violations after flutter analyze has been run. Here's an example filtering out all violations that didn't occur in the current changes, using the third party gem `git_diff_parser`:
+
+```rb
+require 'git_diff_parser'
+
+active_files = (git.modified_files + git.added_files).sort.uniq
+patches = GitDiffParser.parse(git.diff.patch)
+prefix_pwd = "#{Dir.pwd}/"
+# Violation is FlutterViolation(:rule, :description, :file, :line, :column)
+swiftlint.lint_files(inline_mode: true) { |violation|
+  # To transform absolute path to relative path from `flutter analyze --write=report.txt` result
+  filename = violation.file.delete_prefix(prefix_pwd)
+  file_patch = patches.find_patch_by_file(filename)
+  # Filter out unchanged lines
+  !file_patch.nil? && file_patch.changed_lines.any? { |line| line.number == violation.line}
+}
+```
+
 ## Development
 
 1. Clone this repo

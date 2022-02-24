@@ -1,0 +1,8 @@
+Changed lib/appinfo/impl/appinfo_package_info/lib/src/appinfo_package_info.dart
+Changed lib/appinfo/impl/appinfo_package_info/lib/src/appinfo_package_info_initiator.dart
+Changed lib/appinfo/impl/appinfo_package_info/test/appinfo_package_info_initiator_test.dart
+Changed lib/appinfo/impl/appinfo_package_info/test/coverage_test.dart
+Changed lib/appinfo/lib/appinfo.dart
+Changed lib/appinfo/test/coverage_test.dart
+Changed lib/localization/test/coverage_test.dart
+Formatted 200 files (7 changed) in 0.45 seconds.

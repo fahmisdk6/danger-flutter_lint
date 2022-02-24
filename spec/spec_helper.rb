@@ -1,25 +1,27 @@
-require "pathname"
-ROOT = Pathname.new(File.expand_path("..", __dir__))
-$:.unshift((ROOT + "lib").to_s)
-$:.unshift((ROOT + "spec").to_s)
+require 'pathname'
+ROOT = Pathname.new(File.expand_path('..', __dir__))
+$:.unshift((ROOT + 'lib').to_s)
+$:.unshift((ROOT + 'spec').to_s)
 
-require "simplecov"
-SimpleCov.start
+require 'simplecov'
+SimpleCov.start do
+  enable_coverage :branch
+end
 
-if ENV["CI"] == "true"
-  require "codecov"
+if ENV['CI'] == 'true'
+  require 'codecov'
   SimpleCov.formatter = SimpleCov::Formatter::Codecov
 end
 
-require "bundler/setup"
+require 'bundler/setup'
 
-require "rspec"
-require "danger"
-require "danger_plugin"
+require 'rspec'
+require 'danger'
+require 'danger_plugin'
 
 RSpec.configure do |config|
-  config.example_status_persistence_file_path = ".rspec_status"
-  config.filter_gems_from_backtrace "bundler"
+  config.example_status_persistence_file_path = '.rspec_status'
+  config.filter_gems_from_backtrace 'bundler'
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
@@ -30,11 +32,11 @@ end
 # Testing
 def testing_env
   {
-    "HAS_JOSH_K_SEAL_OF_APPROVAL" => "true",
-    "TRAVIS_PULL_REQUEST" => "800",
-    "TRAVIS_REPO_SLUG" => "artsy/eigen",
-    "TRAVIS_COMMIT_RANGE" => "759adcbd0d8f...13c4dc8bb61d",
-    "DANGER_GITHUB_API_TOKEN" => "123sbdq54erfsd3422gdfio"
+    'HAS_JOSH_K_SEAL_OF_APPROVAL' => 'true',
+    'TRAVIS_PULL_REQUEST' => '800',
+    'TRAVIS_REPO_SLUG' => 'artsy/eigen',
+    'TRAVIS_COMMIT_RANGE' => '759adcbd0d8f...13c4dc8bb61d',
+    'DANGER_GITHUB_API_TOKEN' => '123sbdq54erfsd3422gdfio'
   }
 end
 
@@ -46,7 +48,7 @@ def testing_ui
 
   cork = Cork::Board.new(out: @output)
   def cork.string
-    out.string.gsub(/\e\[([;\d]+)?m/, "")
+    out.string.gsub(/\e\[([;\d]+)?m/, '')
   end
   cork
 end

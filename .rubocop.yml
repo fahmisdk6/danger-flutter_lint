@@ -1,24 +1,21 @@
 AllCops:
   TargetRubyVersion: 2.5
+  NewCops: disable
 
 Style/StringLiterals:
-  EnforcedStyle: double_quotes
   Enabled: true
 
 Style/ClassCheck:
   EnforcedStyle: kind_of?
 
-Style/BracesAroundHashParameters:
-  Enabled: false
-
 Lint/UselessAssignment:
   Exclude:
     - '**/spec/**/*'
 
-Layout/IndentHash:
+Layout/FirstHashElementIndentation:
   Enabled: false
 
-Layout/AlignHash:
+Layout/HashAlignment:
   Enabled: false
 
 Layout/DotPosition:
@@ -57,7 +54,7 @@ Metrics/ClassLength:
 Metrics/CyclomaticComplexity:
   Max: 17
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 370
 
 Metrics/ParameterLists:
@@ -98,13 +95,13 @@ Metrics/BlockLength:
 Style/MixinGrouping:
   Enabled: false
 
-Layout/IndentHeredoc:
+Layout/HeredocIndentation:
   Enabled: false
 
 Style/SpecialGlobalVars:
   Enabled: false
 
-PercentLiteralDelimiters:
+Style/PercentLiteralDelimiters:
   PreferredDelimiters:
     "%":  ()
     "%i": ()

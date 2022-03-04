@@ -44,8 +44,7 @@ module Danger
       # Array<FlutterViolatio>(:rule, :description, :file, :line, :column)
       report = lint_report(@files)
 
-      @modified_files = @files || (git.modified_files - git.deleted_files + git.added_files)
-      @modified_files.filter { |file| file.end_with?('.dart') }
+      @modified_files = @files || (git.modified_files - git.deleted_files + git.added_files).filter { |file| file.end_with?('.dart') }
       violations = parse_flutter_violations(report)
       violations = filter_modified_files_violations(violations)
       violations = violations.filter { |violation| filter_block.call(violation) } if filter_block
@@ -59,7 +58,7 @@ module Danger
       lint(inline_mode: inline_mode, &filter_block)
     end
 
-    # Check dart formatt status
+    # Check dart format status
     # @param path [String] Path of the file that wants to be run on dart format
     #   Path to run dart format on, by default will run on all directory, ('.'),
     #   You can pass glob lib/**/*.dart, and specific dart_files lib/main.dart lib/utils.dart
@@ -74,21 +73,24 @@ module Danger
       # dart format -o none .
       # Changed lib/main.dart
       # Formatted 3 files (1 changed) in 0.70 seconds.
+
       format_result = `dart format -o none #{path}`.chomp.split("\n")
-      summary = /Formatted (?<scanned>\S+) files \((?<formatted>\S+) changed\) in (?<time>\S+) seconds./.match(format_result.last)
+      summary_regex = /Formatted (?<scanned>\S+) files \((?<formatted>\S+) changed\) in (?<time>\S+) seconds./
+      summary = summary_regex.match(format_result.last)
       scanned = summary['scanned']
       formatted = summary['formatted']
       prefix = "### Dart Format scanned #{scanned} files,"
       if formatted.to_i.zero?
-        if report_on_success
-          markdown "#{prefix} found #{formatted} issues ✅"
-        end
+        markdown "#{prefix} found #{formatted} issues ✅" if report_on_success
       else
-        modified_files = git.modified_files - git.deleted_files + git.added_files
+        active_files = (git.modified_files - git.deleted_files + git.added_files)
         formatted_files = format_result.map { |line| line.split(' ').last if line.match?(/^Changed/) }.compact
-        formatted_files = formatted_files.filter { |file| modified_files.include?(file) } if only_modified_files.nil? || only_modified_files == true
+        if only_modified_files.nil? || only_modified_files == true
+          formatted_files = formatted_files.filter { |file| active_files.include? file }
+        end
         report_type = warning_only ? 'warn' : 'fail'
-        public_send(report_type, "#{prefix} found formatting issues on #{formatted_files.size} file(s):\n- #{formatted_files.join("\n- ")}")
+        message = "#{prefix} found formatting issues on #{formatted_files.size} file(s):\n- #{formatted_files.join("\n- ")}"
+        public_send(report_type, message)
       end
     end
 
@@ -120,7 +122,7 @@ module Danger
           line = line.strip.delete_prefix(prefix)
           description, file_line = line.split('(').map(&:strip)
           file_line = file_line.delete_suffix(')')
-          file_relative_path = @modified_files.find { |file| file_line.include?(file) }
+          file_relative_path = @modified_files.find { |file| file_line.include? file }
           rule = description
           # Can map rules, but too much effort, just consider rule = description
           # DART_RULES = {
@@ -132,6 +134,8 @@ module Danger
           _, description, file_line, rule = line.split('•').map(&:strip)
         elsif line.include?('-') # For dart analyze modified_files result
           _, file_line, description, rule = line.split('-').map(&:strip)
+          file_name = file_line.split(':').first
+          file_relative_path = @modified_files.find { |file| file.include? file_name }
         end
         file, line_number, column = file_line.split(':')
         file = file_relative_path if file_relative_path
@@ -147,9 +151,7 @@ module Danger
 
     def send_markdown_comment(violations)
       if violations.empty?
-        if report_on_success
-          markdown '### Flutter Analyze found 0 issues ✅'
-        end
+        markdown '### Flutter Analyze found 0 issues ✅' if report_on_success
       else
         public_send(@report_type, markdown_table(violations))
       end
@@ -160,7 +162,7 @@ module Danger
       table << "| File | Line | Rule |\n"
       table << "| ---- | ---- | ---- |\n"
 
-      return violations.reduce(table) { |acc, violation| acc << table_row(violation) }
+      violations.reduce(table) { |acc, violation| acc << table_row(violation) }
     end
 
     def table_row(violation)

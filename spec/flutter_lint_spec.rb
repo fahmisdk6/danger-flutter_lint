@@ -432,18 +432,20 @@ module Danger
                 flutter_lint.report_path = 'spec/fixtures/flutter_analyze_write_with_violations.txt'
               end
 
-              it 'should print markdown message with 5 violations when inline mode is off' do
+              it 'should print markdown message with 7 violations when inline mode is off' do
                 flutter_lint.lint(inline_mode: false)
 
                 expected = <<~MESSAGE
-                ### Flutter Analyze found 5 issues ❌\n
+                ### Flutter Analyze found 7 issues ❌\n
                 | File | Line | Rule |
                 | ---- | ---- | ---- |
                 | `integration_test/app_test.dart` | 11 | Avoid `print` calls in production code |
                 | `integration_test/app_test.dart` | 4 | Duplicate import |
                 | `lib/file.dart` | 9 | The declaration '_bar' isn't referenced |
                 | `lib/file.dart` | 3 | The declaration '_bar' isn't referenced |
+                | `lib/file.dart` | 9 | The name '_bar' is already defined |
                 | `lib/file.dart` | 6 | The declaration '_foo' isn't referenced |
+                | `lib/file.dart` | 10 | A function body must be provided |
                 MESSAGE
 
                 expect(flutter_lint.status_report[:errors].first).to eq(expected)

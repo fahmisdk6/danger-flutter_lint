@@ -113,11 +113,12 @@ module Danger
       return [] if report.empty? || report.include?('No issues found!')
 
       report.each_line.map do |line|
-        # Ignore error, only include info
-        next unless line.include?('info')
+        next unless line.include?('info') || line.include?('error')
 
-        if line.include? '[info]' # For flutter analyze --write=reports.txt reports
-          description, file_line = line.delete_prefix('[info]').split('(').map(&:strip)
+        if line.include?('[info]') || line.include?('[error]') # For flutter analyze --write=reports.txt reports
+          prefix = line.include?('[info]') ? '[info]' : '[error]'
+          line = line.strip.delete_prefix(prefix)
+          description, file_line = line.split('(').map(&:strip)
           file_line = file_line.delete_suffix(')')
           file_relative_path = @modified_files.find { |file| file_line.include?(file) }
           rule = description

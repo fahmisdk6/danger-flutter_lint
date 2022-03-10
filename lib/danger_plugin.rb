@@ -115,7 +115,7 @@ module Danger
       return [] if report.empty? || report.include?('No issues found!')
 
       report.each_line.map do |line|
-        next unless line.include?('info') || line.include?('error')
+        next unless %w(info error).any? { |type| /^(\s+|\[)#{type}/.match?(line) }
 
         if line.include?('[info]') || line.include?('[error]') # For flutter analyze --write=reports.txt reports
           prefix = line.include?('[info]') ? '[info]' : '[error]'

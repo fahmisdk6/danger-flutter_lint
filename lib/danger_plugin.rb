@@ -114,10 +114,11 @@ module Danger
     def parse_flutter_violations(report)
       return [] if report.empty? || report.include?('No issues found!')
 
-      report.each_line.map do |line|
-        next unless %w(info error).any? { |type| /^(\s+|\[)#{type}/.match?(line) }
+      lines = report.split("\n")
+      lines.map.with_index do |line, index|
+        next unless %w(info warning error).any? { |type| /^(\s+|\[)#{type}/.match?(line) }
 
-        if line.include?('[info]') || line.include?('[error]') # For flutter analyze --write=reports.txt reports
+        if line.match?(/^\[(info|error|warning)\]/) # For flutter analyze --write=reports.txt reports
           prefix = line.include?('[info]') ? '[info]' : '[error]'
           line = line.strip.delete_prefix(prefix)
           description, file_line = line.split('(').map(&:strip)
@@ -131,6 +132,7 @@ module Danger
           # }.freeze
           # rule = DART_RULES[description]
         elsif line.include?('•') # For flutter analyze result
+          line = "#{line} #{lines[index + 1].strip}" if line.end_with?('•')
           _, description, file_line, rule = line.split('•').map(&:strip)
         elsif line.include?('-') # For dart analyze modified_files result
           _, file_line, description, rule = line.split('-').map(&:strip)

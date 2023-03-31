@@ -1,6 +1,26 @@
+Analyzing bloc_utils...                                                 
 
-Analyzing my_flutter_project...
+  info • Name types using UpperCamelCase • lib/main.dart:5:7 • camel_case_types
+  info • Prefer const with constant constructors • lib/home/home_page.dart:13:13 • prefer_const_constructors
+  info • AVOID catches without on clauses • lib/profile/user/phone_widget.dart:19:7 • avoid_catches_without_on_clauses
+  warning • Document all public members • lib/src/auto_subscription_mixin.dart:5:1 • public_member_api_docs
+  warning • Document all public members • lib/src/initializable.dart:3:7 • public_member_api_docs
+  warning • Document all public members • lib/src/logging_cubit_mixin.dart:6:1 • public_member_api_docs
+  warning • Document all public members • lib/src/restorable_bloc.dart:6:16 • public_member_api_docs
+  warning • Document all public members • lib/src/safe_emit_mixin.dart:3:1 • public_member_api_docs
+  error • Target of URI doesn't exist: 'package:example/main.dart' •
+         example/test/widget_test.dart:11:8 • uri_does_not_exist
+  error • The name 'MyApp' isn't a class • example/test/widget_test.dart:16:35 •
+         creation_with_non_type
+  error • Document all public members • lib/src/auto_subscription_mixin.dart:5:1 •
+         public_member_api_docs
+  error • Document all public members • lib/src/initializable.dart:3:7 •
+         public_member_api_docs
+  error • Document all public members • lib/src/logging_cubit_mixin.dart:6:1 •
+         public_member_api_docs
+  error • Document all public members • lib/src/restorable_bloc.dart:6:16 •
+         public_member_api_docs
+  error • Document all public members • lib/src/safe_emit_mixin.dart:3:1 •
+         public_member_api_docs
 
-      info • Name types using UpperCamelCase • lib/main.dart:5:7 • camel_case_types
-      info • Prefer const with constant constructors • lib/home/home_page.dart:13:13 • prefer_const_constructors
-      info • AVOID catches without on clauses • lib/profile/user/phone_widget.dart:19:7 • avoid_catches_without_on_clauses
+17 issues found. (ran in 2.6s)

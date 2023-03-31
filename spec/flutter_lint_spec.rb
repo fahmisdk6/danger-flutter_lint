@@ -227,17 +227,29 @@ module Danger
                   expect(flutter_lint.status_report[:errors]).not_to be_empty
                 end
 
-                it 'should print markdown message with 3 violations when inline mode is off & only modified files set to false' do
+                it 'should print markdown message with 15 violations when inline mode is off & only modified files set to false' do
                   flutter_lint.only_modified_files = false
                   flutter_lint.lint(inline_mode: false)
 
                   expected = <<~MESSAGE
-                ### Flutter Analyze found 3 issues ❌\n
+                ### Flutter Analyze found 15 issues ❌\n
                 | File | Line | Rule |
                 | ---- | ---- | ---- |
                 | `lib/main.dart` | 5 | camel_case_types |
                 | `lib/home/home_page.dart` | 13 | prefer_const_constructors |
                 | `lib/profile/user/phone_widget.dart` | 19 | avoid_catches_without_on_clauses |
+                | `lib/src/auto_subscription_mixin.dart` | 5 | public_member_api_docs |
+                | `lib/src/initializable.dart` | 3 | public_member_api_docs |
+                | `lib/src/logging_cubit_mixin.dart` | 6 | public_member_api_docs |
+                | `lib/src/restorable_bloc.dart` | 6 | public_member_api_docs |
+                | `lib/src/safe_emit_mixin.dart` | 3 | public_member_api_docs |
+                | `example/test/widget_test.dart` | 11 | uri_does_not_exist |
+                | `example/test/widget_test.dart` | 16 | creation_with_non_type |
+                | `lib/src/auto_subscription_mixin.dart` | 5 | public_member_api_docs |
+                | `lib/src/initializable.dart` | 3 | public_member_api_docs |
+                | `lib/src/logging_cubit_mixin.dart` | 6 | public_member_api_docs |
+                | `lib/src/restorable_bloc.dart` | 6 | public_member_api_docs |
+                | `lib/src/safe_emit_mixin.dart` | 3 | public_member_api_docs |
                   MESSAGE
 
                   expect(flutter_lint.status_report[:errors].first).to eq(expected)
@@ -331,17 +343,29 @@ module Danger
                 expect(flutter_lint.status_report[:errors]).to be_empty
               end
 
-              it 'should print markdown message with 3 violations when inline mode is off & only modified files set to false' do
+              it 'should print markdown message with 15 violations when inline mode is off & only modified files set to false' do
                 flutter_lint.only_modified_files = false
                 flutter_lint.lint(inline_mode: false)
 
                 expected = <<~MESSAGE
-              ### Flutter Analyze found 3 issues ❌\n
+              ### Flutter Analyze found 15 issues ❌\n
               | File | Line | Rule |
               | ---- | ---- | ---- |
               | `lib/main.dart` | 5 | camel_case_types |
               | `lib/home/home_page.dart` | 13 | prefer_const_constructors |
               | `lib/profile/user/phone_widget.dart` | 19 | avoid_catches_without_on_clauses |
+              | `lib/src/auto_subscription_mixin.dart` | 5 | public_member_api_docs |
+              | `lib/src/initializable.dart` | 3 | public_member_api_docs |
+              | `lib/src/logging_cubit_mixin.dart` | 6 | public_member_api_docs |
+              | `lib/src/restorable_bloc.dart` | 6 | public_member_api_docs |
+              | `lib/src/safe_emit_mixin.dart` | 3 | public_member_api_docs |
+              | `example/test/widget_test.dart` | 11 | uri_does_not_exist |
+              | `example/test/widget_test.dart` | 16 | creation_with_non_type |
+              | `lib/src/auto_subscription_mixin.dart` | 5 | public_member_api_docs |
+              | `lib/src/initializable.dart` | 3 | public_member_api_docs |
+              | `lib/src/logging_cubit_mixin.dart` | 6 | public_member_api_docs |
+              | `lib/src/restorable_bloc.dart` | 6 | public_member_api_docs |
+              | `lib/src/safe_emit_mixin.dart` | 3 | public_member_api_docs |
                 MESSAGE
 
                 expect(flutter_lint.status_report[:warnings].first).to eq(expected)
@@ -356,10 +380,15 @@ module Danger
                 expected_warnings = [
                   'Name types using UpperCamelCase',
                   'Prefer const with constant constructors',
-                  'AVOID catches without on clauses'
+                  'AVOID catches without on clauses',
+                  *['Document all public members'] * 5,
+                  "Target of URI doesn't exist: 'package:example/main.dart'",
+                  "The name 'MyApp' isn't a class",
+                  *['Document all public members'] * 5
                 ]
 
                 expect(warnings).to eq(expected_warnings)
+                expect(warnings.size).to eq(expected_warnings.size)
               end
 
               it 'should print markdown message with 2 violations when inline mode is off & only modified files default to true' do

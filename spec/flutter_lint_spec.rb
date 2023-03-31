@@ -125,7 +125,8 @@ module Danger
             'lib/home/home_page.dart',
             'lib/profile/user/phone_widget.dart',
             'lib/file.dart',
-            'integration_test/app_test.dart'
+            'integration_test/app_test.dart',
+            'lib/src/safe_emit_mixin.dart'
           ]
           allow(flutter_lint.git).to receive(:deleted_files).and_return([])
           allow(flutter_lint.git).to receive(:added_files).and_return([])
@@ -162,13 +163,14 @@ module Danger
                   expect(flutter_lint.status_report[:errors]).not_to be_empty
                 end
 
-                it 'should print markdown message with 2 violations when inline mode is off' do
+                it 'should print markdown message with 3 violations when inline mode is off' do
                   flutter_lint.lint_files(@modified_files, inline_mode: false)
 
                   expected = <<~MESSAGE
-                  ### Flutter Analyze found 2 issues ❌\n
+                  ### Flutter Analyze found 3 issues ❌\n
                   | File | Line | Rule |
                   | ---- | ---- | ---- |
+                  | `lib/src/safe_emit_mixin.dart` | 3 | public_member_api_docs |
                   | `integration_test/app_test.dart` | 4 | duplicate_import |
                   | `integration_test/app_test.dart` | 11 | avoid_print |
                   MESSAGE
@@ -176,12 +178,13 @@ module Danger
                   expect(flutter_lint.status_report[:errors].first).to eq(expected)
                 end
 
-                it 'should send 2 inline comment instead of markdown when inline mode is on' do
+                it 'should send 3 inline comment instead of markdown when inline mode is on' do
                   flutter_lint.lint_files(@modified_files, inline_mode: true)
 
                   errors = flutter_lint.status_report[:errors]
 
                   expected_errors = [
+                    'Document all public members.',
                     'Duplicate import. Try removing all but one import of the library.',
                     'Avoid `print` calls in production code.'
                   ]
@@ -270,28 +273,32 @@ module Danger
                   expect(errors).to eq(errors)
                 end
 
-                it 'should print markdown message with 2 violations when inline mode is off & only modified files default to true' do
+                it 'should print markdown message with 4 violations when inline mode is off & only modified files default to true' do
                   flutter_lint.lint(inline_mode: false)
 
                   expected = <<~MESSAGE
-                ### Flutter Analyze found 2 issues ❌\n
+                ### Flutter Analyze found 4 issues ❌\n
                 | File | Line | Rule |
                 | ---- | ---- | ---- |
                 | `lib/home/home_page.dart` | 13 | prefer_const_constructors |
                 | `lib/profile/user/phone_widget.dart` | 19 | avoid_catches_without_on_clauses |
+                | `lib/src/safe_emit_mixin.dart` | 3 | public_member_api_docs |
+                | `lib/src/safe_emit_mixin.dart` | 3 | public_member_api_docs |
                   MESSAGE
 
                   expect(flutter_lint.status_report[:errors].first).to eq(expected)
                 end
 
-                it 'should send 2 inline comment when inline mode is on & only modified files default to true' do
+                it 'should send 4 inline comment when inline mode is on & only modified files default to true' do
                   flutter_lint.lint(inline_mode: true)
 
                   errors = flutter_lint.status_report[:errors]
 
                   expected_errors = [
                     'Prefer const with constant constructors',
-                    'AVOID catches without on clauses'
+                    'AVOID catches without on clauses',
+                    'Document all public members',
+                    'Document all public members'
                   ]
 
                   expect(errors).to eq(expected_errors)
@@ -395,11 +402,13 @@ module Danger
                 flutter_lint.lint(inline_mode: false)
 
                 expected = <<~MESSAGE
-              ### Flutter Analyze found 2 issues ❌\n
+              ### Flutter Analyze found 4 issues ❌\n
               | File | Line | Rule |
               | ---- | ---- | ---- |
               | `lib/home/home_page.dart` | 13 | prefer_const_constructors |
               | `lib/profile/user/phone_widget.dart` | 19 | avoid_catches_without_on_clauses |
+              | `lib/src/safe_emit_mixin.dart` | 3 | public_member_api_docs |
+              | `lib/src/safe_emit_mixin.dart` | 3 | public_member_api_docs |
                 MESSAGE
 
                 expect(flutter_lint.status_report[:warnings].first).to eq(expected)
@@ -413,7 +422,9 @@ module Danger
 
                 expected_warnings = [
                   'Prefer const with constant constructors',
-                  'AVOID catches without on clauses'
+                  'AVOID catches without on clauses',
+                  'Document all public members',
+                  'Document all public members'
                 ]
                 expect(warnings).to eq(expected_warnings)
               end

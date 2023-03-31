@@ -116,7 +116,7 @@ module Danger
 
       lines = report.split("\n")
       lines.map.with_index do |line, index|
-        next unless %w(info warning error).any? { |type| /^(\s+|\[)#{type}/.match?(line) }
+        next unless %w(info error warning).any? { |type| line.match?(/^(\s+?|\[)#{type}/) }
 
         if line.match?(/^\[(info|error|warning)\]/) # For flutter analyze --write=reports.txt reports
           prefix = line.include?('[info]') ? '[info]' : '[error]'

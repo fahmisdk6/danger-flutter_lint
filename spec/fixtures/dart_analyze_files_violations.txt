@@ -1,6 +1,7 @@
-Analyzing app_test.dart, test.dart...
+Analyzing app_test.dart, test.dart, lib/src/safe_emit_mixin.dart...
 
+   warning - lib/src/safe_emit_mixin.dart:3:1 - Document all public members. - public_member_api_docs
    info - integration_test/app_test.dart:4:8 - Duplicate import. Try removing all but one import of the library. - duplicate_import
    info - integration_test/app_test.dart:11:3 - Avoid `print` calls in production code. - avoid_print
 
-2 issues found.
+3 issues found.

@@ -131,13 +131,18 @@ module Danger
           #   'Prefer const with constant constructors' => 'prefer_const_constructors'
           # }.freeze
           # rule = DART_RULES[description]
+          puts("if branch 1 #{file_line}'");
         elsif line.include?('•') # For flutter analyze result
           line = "#{line} #{lines[index + 1].strip}" if line.end_with?('•')
           _, description, file_line, rule = line.split('•').map(&:strip)
+          puts("if branch 2 #{file_line}'");
         elsif line.include?('-') # For dart analyze modified_files result
           _, file_line, description, rule = line.split('-').map(&:strip)
           file_name = file_line.split(':').first
           file_relative_path = @modified_files.find { |file| file.include? file_name }
+          puts("if branch 3 #{file_line}'");
+        else
+          puts("if branch 4 #{file_line}'");
         end
         file, line_number, column = file_line.split(':')
         file = file_relative_path if file_relative_path

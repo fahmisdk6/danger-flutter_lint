@@ -115,10 +115,9 @@ module Danger
       return [] if report.empty? || report.include?('No issues found!')
 
       lines = report.split("\n")
-      puts "lines: #{lines}"
       lines.map.with_index do |line, index|
         next unless %w(info error warning).any? { |type| line.match?(/^(\[|\s+)?#{type}/) }
-        puts "line: #{line}"
+
         if line.match?(/^\[(info|error|warning)\]/) # For flutter analyze --write=reports.txt reports
           prefix = line.include?('[info]') ? '[info]' : '[error]'
           line = line.strip.delete_prefix(prefix)
@@ -132,18 +131,13 @@ module Danger
           #   'Prefer const with constant constructors' => 'prefer_const_constructors'
           # }.freeze
           # rule = DART_RULES[description]
-          puts("if branch 1 #{file_line}");
         elsif line.include?('•') # For flutter analyze result
           line = "#{line} #{lines[index + 1].strip}" if line.end_with?('•')
           _, description, file_line, rule = line.split('•').map(&:strip)
-          puts("if branch 2 #{file_line}");
         elsif line.include?('-') # For dart analyze modified_files result
           _, file_line, description, rule = line.split('-').map(&:strip)
           file_name = file_line.split(':').first
           file_relative_path = @modified_files.find { |file| file.include? file_name }
-          puts("if branch 3 #{file_line}");
-        else
-          puts("if branch 4 #{file_line}");
         end
         next if file_line.nil?
 
